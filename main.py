@@ -33,23 +33,19 @@ async def send_code(
 
 
 async def login(
-        api_id: str | None, api_hash: str | None, phone_number: str | None
-) -> TelegramClient:
+        api_id: str | None, api_hash: str | None, phone_number: str | None, code: str | None
+) -> TelegramClient | None:
     """Create a telethon session or reuse existing one"""
     client = TelegramClient(phone_number, api_id, api_hash)
     await client.connect()
     if not await client.is_user_authorized():
-        await client.send_code_request(phone_number)
         try:
-            await client.sign_in(
-                phone_number, input("Enter the code (sent on telegram): ")
-            )
-        except errors.SessionPasswordNeededError:
-            pw = getpass(
-                "Two-Step Verification enabled. Please enter your account password: "
-            )
-            await client.sign_in(password=pw)
-    print("Done.")
+            await client.sign_in(phone_number, code)
+        except Exception as err:
+            print(err)
+            return None
+
+    print("login is successfully")
     return client
 
 
@@ -107,24 +103,6 @@ async def handle_login_request():
                 "code": 500
             }
         ), 500
-
-
-# @app.route('/test', methods=['POST'])
-# async def handle_post_request():
-#     if 'api-key' not in request.headers:
-#         return "Token is missing.", 401
-#
-#     if request.headers['api-key'] != "SECRET_KEY":
-#         return "Invalid token.", 401
-#     try:
-#         data = request.get_json()
-#         client_tele = await login(os.getenv("API_ID"), os.getenv("API_HASH"), os.getenv("PHONE_NUMBER"))
-#         res = await validate_users(client_tele, data["phone_number"])
-#         client_tele.disconnect()
-#         return res, 200
-#     except ValueError:
-#         return "Format_Error", 413
-#
 
 if __name__ == '__main__':
     app.run()
