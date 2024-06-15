@@ -1,12 +1,16 @@
 import asyncio
 import json
+import os
 import re
 from getpass import getpass
 
 import click
+from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from telethon.sync import TelegramClient, errors, functions
 from telethon.tl import types
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -250,7 +254,7 @@ async def run_program(
 
 @app.route('/v1/api/accounts', methods=['POST'])
 async def handle_account_request():
-    if 'api-key' not in request.headers or request.headers['api-key'] != "2Ywf5g7GsWyypaPz2Ae9C8vNdt8X566aAhk6nDkTZcrCy8ndXd":
+    if 'api-key' not in request.headers or request.headers['api-key'] != os.getenv("API_KEY"):
         response = {
             "data": {},
             "message": "api key is invalid",
@@ -284,7 +288,7 @@ async def handle_account_request():
 
 @app.route('/v1/api/auth/login', methods=['POST'])
 async def handle_login_request():
-    if 'api-key' not in request.headers or request.headers['api-key'] != "2Ywf5g7GsWyypaPz2Ae9C8vNdt8X566aAhk6nDkTZcrCy8ndXd":
+    if 'api-key' not in request.headers or request.headers['api-key'] != os.getenv("API_KEY"):
         response = {
             "data": {},
             "message": "api key is invalid",
