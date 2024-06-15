@@ -7,12 +7,14 @@ from getpass import getpass
 import click
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from telethon.sync import TelegramClient, errors, functions
 from telethon.tl import types
 
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 def get_human_readable_user_status(status: types.TypeUserStatus):
