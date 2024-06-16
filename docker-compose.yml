@@ -1,0 +1,11 @@
+version: '3'
+services:
+  app:
+    image: tuannguyen23996/support-telegram:latest
+    ports:
+      - 5000:5000
+    networks:
+      - telegram
+networks:
+  telegram:
+    external: true
