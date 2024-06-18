@@ -319,7 +319,7 @@ async def handle_login_request():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run("0.0.0.0")
 
 # if __name__ == "__main__":
 #     main_entrypoint()
