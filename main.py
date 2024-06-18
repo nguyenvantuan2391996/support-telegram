@@ -319,7 +319,7 @@ async def handle_login_request():
 
 
 if __name__ == '__main__':
-    app.run("" + os.getenv("PORT"))
+    app.run()
 
 # if __name__ == "__main__":
 #     main_entrypoint()

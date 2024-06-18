@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    image: tuannguyen23996/support-telegram:latest
+    image: tuannguyen23996/support-telegram:1.2
     ports:
       - 5000:5000
     networks:
