@@ -5,10 +5,12 @@ click==8.1.7
 exceptiongroup==1.2.0
 Flask==3.0.3
 Flask-Cors==4.0.1
+gunicorn==22.0.0
 idna==3.6
 itsdangerous==2.2.0
 Jinja2==3.1.4
 MarkupSafe==2.1.5
+packaging==24.1
 pyaes==1.6.1
 pyasn1==0.5.1
 python-dotenv==1.0.1

@@ -5,6 +5,7 @@ import re
 from getpass import getpass
 
 import click
+import gunicorn
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -319,7 +320,7 @@ async def handle_login_request():
 
 
 if __name__ == '__main__':
-    app.run("0.0.0.0")
+    gunicorn.run()
 
 # if __name__ == "__main__":
 #     main_entrypoint()
