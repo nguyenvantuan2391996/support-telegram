@@ -320,7 +320,7 @@ async def handle_login_request():
 
 
 if __name__ == '__main__':
-    gunicorn.run()
+    app.run()
 
 # if __name__ == "__main__":
 #     main_entrypoint()
