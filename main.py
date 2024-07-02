@@ -255,6 +255,49 @@ async def run_program(
     client.disconnect()
 
 
+async def is_phone_registered(client, phone_number):
+    try:
+        contact = InputPhoneContact(client_id=0, phone=phone_number, first_name="Test", last_name="User")
+        result = await client(ImportContactsRequest([contact]))
+        if result.users:
+            status = "Đã đăng ký."
+        else:
+            status = "Chưa đăng ký."
+        # Remove the imported contact
+        if result.imported:
+            await client(DeleteContactsRequest(id=[result.imported[0].user_id]))
+    except errors.FloodWaitError as e:
+        return f"Flood wait error: {e.seconds} seconds."
+    except errors.UserDeactivatedError:
+        return "Tài khoản bị vô hiệu hoá."
+    except errors.UserRestrictedError:
+        return "Tài khoản bị hạn chế."
+    except errors.PhoneNumberUnoccupiedError:
+        return "Chưa đăng ký."
+    except Exception as e:
+        return f"An error occurred: {e}"
+
+    return status
+
+
+async def get_info_phone_number(client: TelegramClient, phone_numbers: str) -> dict:
+    """
+    Take in a string of comma separated phone numbers and try to get the user information associated with each phone number.
+    """
+    if not phone_numbers or not len(phone_numbers):
+        phone_numbers = input("Enter the phone numbers to check, separated by commas: ")
+    result = {}
+    phones = [re.sub(r"\s+", "", p, flags=re.UNICODE) for p in phone_numbers.split(",")]
+    try:
+        for phone in phones:
+            if phone not in result:
+                result[phone] = await is_phone_registered(client, phone)
+    except Exception as e:
+        print(e)
+        raise
+    return result
+
+
 @app.route('/v1/api/accounts', methods=['POST'])
 async def handle_account_request():
     if 'api-key' not in request.headers or request.headers['api-key'] != os.getenv("API_KEY"):
@@ -275,7 +318,7 @@ async def handle_account_request():
                 }
             )
 
-        res = await validate_users(client_tele, data["phone_numbers"])
+        res = await get_info_phone_number(client_tele, data["phone_numbers"])
         client_tele.disconnect()
 
         return res, 200
